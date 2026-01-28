@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import DatePicker from 'react-native-date-picker';
+import Screen from '../components/screen/Screen';
 
 const AddMedication = () => {
     const [medication, setMedication] = useState({
@@ -51,7 +52,7 @@ const AddMedication = () => {
 
     }, [])
     return (
-        <View style={styles.Screen}>
+        <View>
             <View>
                 <Text>medicine name</Text>
                 <TextInput

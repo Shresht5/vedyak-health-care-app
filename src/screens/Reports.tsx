@@ -1,10 +1,19 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import Text1 from '../components/text/Text1'
+import Screen from '../components/screen/Screen'
+import AddButton from '../components/button/AddButton'
 
-const Reports = () => {
+const Reports = ({ navigation }: any) => {
     return (
-        <View>
-            <Text>Reports</Text>
+
+        <View style={{ flex: 1 }}>
+            <Screen>
+                <Pressable onPress={() => { navigation.navigate('AddReports') }}>
+                    <Text1>+ add</Text1>
+                </Pressable>
+            </Screen>
+            <AddButton addFunction={() => { navigation.navigate("AddReports") }} />
         </View>
     )
 }

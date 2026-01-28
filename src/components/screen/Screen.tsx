@@ -8,7 +8,7 @@ type ScreenProps = {
 const Screen: React.FC<ScreenProps> = ({ children }) => {
     const isDarkMode = useColorScheme() === 'dark';
     return (
-        <ScrollView style={{ backgroundColor: isDarkMode ? '#000' : '#fff' }}>
+        <ScrollView style={{ flex: 1, backgroundColor: isDarkMode ? '#000' : '#fff', padding: 10, position: "relative", }}>
             {children}
         </ScrollView>
     )
