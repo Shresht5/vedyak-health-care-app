@@ -1,11 +1,14 @@
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Pressable, StyleSheet, Text, TextInput, useColorScheme, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import DatePicker from 'react-native-date-picker';
+import ContentContainer from '../components/container/ContentContainer'
 import Screen from '../components/screen/Screen';
+import Text2 from '../components/text/Text2';
 
 const AddMedication = () => {
+    const isDarkMode = useColorScheme() === 'dark';
     const [medication, setMedication] = useState({
-        medicineName: '',
+        medicationName: '',
         frequency: 'everyday',
         schedule: [{
             label: 'carol mh',
@@ -52,68 +55,71 @@ const AddMedication = () => {
 
     }, [])
     return (
-        <View>
-            <View>
-                <Text>medicine name</Text>
+        <Screen>
+            <ContentContainer>
+                <Text2>medication name</Text2>
                 <TextInput
-                    placeholder='Enter medicine name'
-                    value={medication.medicineName}
-                    onChangeText={(text) => { setMedication({ ...medication, medicineName: text }) }}
+                    style={{ color: isDarkMode ? "#fff" : "#000" }}
+                    placeholder='Enter mediccation name'
+                    value={medication.medicationName}
+                    onChangeText={(text) => { setMedication({ ...medication, medicationName: text }) }}
                 />
-            </View>
-            <View style={styles.frequencyContainer}>
-                <Text>Frequency</Text>
+            </ContentContainer>
+            <ContentContainer>
+                <Text2>Frequency</Text2>
                 <Pressable onPress={() => setShowFrequency(true)}>
-                    <Text>{frequency}</Text>
+                    <Text2>{frequency}</Text2>
                 </Pressable>
                 {showFrequency &&
-                    <View style={styles.freqMenu}>
+                    <View style={styles.freqMenu} >
                         <Pressable onPress={() => { setFrequency("everday"); setShowFrequency(false) }}>
-                            <Text>everyday</Text>
+                            <Text2>everyday</Text2>
                         </Pressable>
 
                         <Pressable onPress={() => { setFrequency("every week"); setShowFrequency(false) }}>
-                            <Text>every week</Text>
+                            <Text2>every week</Text2>
                         </Pressable>
                     </View>
                 }
-            </View>
-            <View>
-                <Text>schedule</Text>
+            </ContentContainer>
+            <ContentContainer>
+                <Text2>schedule</Text2>
                 <Pressable onPress={() => addSchedule()}>
-                    <Text>+ add</Text>
+                    <Text2>+ add</Text2>
                 </Pressable>
                 <View>
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                        <Text>label</Text>
-                        <Text>dose</Text>
+                        <Text2>label</Text2>
+                        <Text2>dose</Text2>
                         <Text></Text>
                     </View>
                     {medication.schedule.map((item, i) => (
                         <View key={i} style={{ flexDirection: "row", justifyContent: "space-between" }}>
                             <TextInput
+                                style={{ color: isDarkMode ? "#fff" : "#000" }}
                                 placeholder="Label"
                                 value={item.label}
                                 onChangeText={(text) => updateSchedule(i, 'label', text)}
-                                style={styles.input}
+
                             />
                             <TextInput
+                                style={{ color: isDarkMode ? "#fff" : "#000" }}
                                 placeholder="Dose"
                                 keyboardType="numeric"
                                 value={item.dose.toString()}
                                 onChangeText={(text) => updateSchedule(i, 'dose', text)}
-                                style={styles.input}
+
                             />
                             <Pressable onPress={() => removeSchedule(i)}>
-                                <Text>delete</Text>
+                                <Text2>delete</Text2>
                             </Pressable>
                         </View>
                     ))}
                 </View>
-            </View>
-            <View>
+            </ContentContainer>
+            <ContentContainer>
                 <Pressable onPress={() => setOpenT(true)}>
-                    <Text>select time: {medication.timeing.toLocaleTimeString()}</Text>
+                    <Text2>select time: {medication.timeing.toLocaleTimeString()}</Text2>
                 </Pressable>
                 <DatePicker
                     modal
@@ -122,10 +128,10 @@ const AddMedication = () => {
                     mode='time'
                     onConfirm={(selectedTime) => { setOpenT(false); setMedication({ ...medication, timeing: selectedTime }) }}
                 />
-            </View>
-            <View>
+            </ContentContainer>
+            <ContentContainer>
                 <Pressable onPress={() => setOpenD(true)}>
-                    <Text>select started date: {medication.started.toLocaleDateString()}</Text>
+                    <Text2>select started date: {medication.started.toLocaleDateString()}</Text2>
                 </Pressable>
                 <DatePicker
                     modal
@@ -134,18 +140,19 @@ const AddMedication = () => {
                     mode='date'
                     onConfirm={(selectedTime) => { setOpenD(false); setMedication({ ...medication, started: selectedTime }) }}
                 />
-            </View>
-            <View>
-                <Text>stock</Text>
+            </ContentContainer>
+            <ContentContainer>
+                <Text2>stock</Text2>
                 <TextInput
+                    style={{ color: isDarkMode ? "#fff" : "#000" }}
                     placeholder='Enter stock of medicine...'
                     keyboardType='numeric'
                     value={String(medication.stock)}
                     onChangeText={(text) => { setMedication({ ...medication, stock: Number(text) }) }}
                 />
-            </View>
-            <View>
-                <Text>notification</Text>
+            </ContentContainer>
+            <ContentContainer>
+                <Text2>notification</Text2>
                 <Pressable
                     onPress={() =>
                         setMedication({
@@ -154,17 +161,25 @@ const AddMedication = () => {
                         })
                     }
                 >
-                    <Text>{medication.notification ? 'ON' : 'OFF'}</Text>
+                    <Text2>{medication.notification ? 'ON' : 'OFF'}</Text2>
                 </Pressable>
-            </View>
-            <Text>{medication.medicineName}</Text>
+            </ContentContainer>
+            <ContentContainer>
+                <Pressable
+                    onPress={() => { }}
+                    style={{ alignItems: "center" }}
+                >
+                    <Text2>save</Text2>
+                </Pressable>
+            </ContentContainer>
+            <Text>{medication.medicationName}</Text>
             <Text>{medication.frequency}</Text>
             <Text>Schedule:</Text>
             <Text>{medication.timeing.toLocaleTimeString()}</Text>
             <Text>{medication.started.toLocaleDateString()}</Text>
             <Text>{medication.stock}</Text>
             <Text>{medication.notification ? "true" : "false"}</Text>
-        </View >
+        </Screen >
     )
 }
 
@@ -180,7 +195,7 @@ const styles = StyleSheet.create({
     },
     freqMenu: {
         position: "absolute",
-        backgroundColor: "#FFF"
+        backgroundColor: "#000"
     },
     input: {
         borderWidth: 1,
