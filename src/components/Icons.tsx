@@ -18,6 +18,14 @@ const ICONS = {
         light: require('../global/icons/Setting-Light.png'),
         dark: require('../global/icons/Setting-Dark.png'),
     },
+    camera: {
+        light: require('../global/icons/Camera-Light.png'),
+        dark: require('../global/icons/Camera-Dark.png'),
+    },
+    trash: {
+        light: require('../global/icons/Trash-Light.png'),
+        dark: require('../global/icons/Trash-Dark.png'),
+    },
 };
 
 type IconName = keyof typeof ICONS;

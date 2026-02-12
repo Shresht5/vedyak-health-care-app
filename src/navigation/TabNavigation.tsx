@@ -14,13 +14,13 @@ const TabNavigation = () => {
         <Tab.Navigator
             screenOptions={{
                 tabBarStyle: {
-                    backgroundColor: isDark ? '#000' : '#fff',
+                    backgroundColor: isDark ? '#111' : '#eee',
                     borderTopColor: isDark ? '#222' : '#ccc',
                 },
                 tabBarActiveTintColor: isDark ? '#fff' : '#000',
-                tabBarInactiveTintColor: isDark ? '#888' : '#888',
+                tabBarInactiveTintColor: isDark ? '#aaa' : '#555',
                 headerStyle: {
-                    backgroundColor: isDark ? '#000' : '#fff',
+                    backgroundColor: isDark ? '#111' : '#eee',
                 },
                 headerTintColor: isDark ? '#fff' : '#000',
             }}>

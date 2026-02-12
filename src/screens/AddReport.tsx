@@ -1,12 +1,16 @@
-import { Alert, Image, PermissionsAndroid, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Alert, Image, PermissionsAndroid, Platform, Pressable, StyleSheet, Text, TextInput, useColorScheme, View } from 'react-native'
 import React, { useState } from 'react'
 import Text2 from '../components/text/Text2'
 import Text4 from '../components/text/Text4'
 import Screen from '../components/screen/Screen'
+import ContentContainer from '../components/container/ContentContainer'
 import DatePicker from 'react-native-date-picker'
 import { Asset, launchCamera, launchImageLibrary } from 'react-native-image-picker'
+import Icons from '../components/Icons'
+import { addReport } from '../services/db/Reports'
 
 const AddReports = ({ navigation }: any) => {
+    const isDarkMode = useColorScheme() === 'dark';
     const [document, setDocument] = useState({
         patiantName: "",
         title: "",
@@ -48,7 +52,6 @@ const AddReports = ({ navigation }: any) => {
         }));
     };
 
-
     // ✅ Gallery (no permission needed)
     const pickImages = async () => {
         const result = await launchImageLibrary({
@@ -66,6 +69,7 @@ const AddReports = ({ navigation }: any) => {
             images: [...prev.images, ...assets]
         }));
     };
+
     //delete image by index
     const deleteImage = (index: number) => {
         setDocument(prev => ({
@@ -73,41 +77,70 @@ const AddReports = ({ navigation }: any) => {
             images: prev.images.filter((_, i) => i !== index),
         }));
     };
+
+    //save
+    const handleSave = async () => {
+        try {
+            // If title is empty, use first PDF file name
+            let finalTitle = document.title;
+
+            if (!finalTitle && document.pdf.length > 0) {
+                const firstPdf = document.pdf[0];
+                finalTitle = firstPdf.fileName || "Untitled Report";
+            }
+
+            await addReport({
+                ...document,
+                title: finalTitle,
+                images: document.images.map(img => img.uri || ""),
+                pdf: document.pdf.map(file => file.uri || "")
+            });
+            Alert.alert('report saved!');
+            navigation.navigate('Tab', { screen: 'reports', })
+        } catch (err) {
+            console.error(err);
+            Alert.alert('Error saving report.');
+        }
+    };
+
     return (
         <Screen>
-            <View>
+            <ContentContainer>
                 <Text4>Patiant Name</Text4>
                 <View>
                     <TextInput
+                        style={{ color: isDarkMode ? "#fff" : "#000" }}
                         placeholder='Enter patiant name'
                         value={document.patiantName}
                         onChangeText={(text) => { setDocument({ ...document, patiantName: text }) }}
                     />
                 </View>
-            </View>
-            <View>
-                <Text4>Document Title</Text4>
+            </ContentContainer>
+            <ContentContainer>
+                <Text4> Title</Text4>
                 <View>
                     <TextInput
-                        placeholder='Enter medicine name'
+                        style={{ color: isDarkMode ? "#fff" : "#000" }}
+                        placeholder='Enter Tilte'
                         value={document.title}
                         onChangeText={(text) => { setDocument({ ...document, title: text }) }}
                     />
                 </View>
-            </View>
-            <View>
+            </ContentContainer>
+            <ContentContainer>
                 <Text4>Personal Notes</Text4>
                 <View>
                     <TextInput
-                        placeholder='Enter motes'
+                        style={{ color: isDarkMode ? "#fff" : "#000" }}
+                        placeholder='Enter notes'
                         value={document.note}
                         onChangeText={(text) => { setDocument({ ...document, note: text }) }}
                     />
                 </View>
-            </View>
-            <View>
+            </ContentContainer>
+            <ContentContainer>
                 <Pressable onPress={() => setOpenD(true)}>
-                    <Text>select  date: {document.date.toLocaleDateString()}</Text>
+                    <Text2>select  date: {document.date.toLocaleDateString()}</Text2>
                 </Pressable>
                 <DatePicker
                     modal
@@ -116,35 +149,44 @@ const AddReports = ({ navigation }: any) => {
                     mode='date'
                     onConfirm={(selectedTime) => { setOpenD(false); setDocument({ ...document, date: selectedTime }) }}
                 />
-            </View>
-            <View>
-                <View>
-                    <Pressable onPress={openCamera}>
-                        <Text2>camera</Text2>
-                    </Pressable>
-                    <Pressable onPress={pickImages}>
-                        <Text2>browse</Text2>
-                    </Pressable>
-
+            </ContentContainer>
+            <ContentContainer>
+                <Text2>Images</Text2>
+                <View style={{ flexDirection: "row", gap: "4%" }}>
+                    <View >
+                        <Pressable onPress={openCamera}>
+                            <ContentContainer>
+                                <Icons icon='camera' />
+                            </ContentContainer>
+                        </Pressable>
+                    </View>
+                    <View >
+                        <Pressable onPress={pickImages}>
+                            <ContentContainer>
+                                <Icons icon='reports' />
+                            </ContentContainer>
+                        </Pressable>
+                    </View>
                 </View>
-                <View>
+                <View style={{ flexDirection: "row", gap: 5, flexWrap: "wrap", paddingTop: 10 }} >
                     {document.images.map((img, index) => (
                         <Pressable key={index} onPress={() => deleteImage(index)}>
                             <Image
 
                                 source={{ uri: img.uri }}
-                                style={{ height: 100, width: 100 }}
+                                style={{ width: 80, aspectRatio: 1, borderRadius: 10, }}
+                                resizeMode="cover"
                             />
                         </Pressable>
                     ))}
                 </View>
-                <View>
-                    <Pressable>
-                        <Text2>save</Text2>
-                    </Pressable>
-                </View>
-            </View>
-        </Screen>
+            </ContentContainer>
+            <Pressable onPress={() => handleSave()}>
+                <ContentContainer>
+                    <Text2>save</Text2>
+                </ContentContainer>
+            </Pressable>
+        </Screen >
     )
 }
 

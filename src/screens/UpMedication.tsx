@@ -1,12 +1,14 @@
+import { deleteMedication, getMedicationById } from '../services/db/MedicationDB'
 import { Pressable, StyleSheet, Text, TextInput, useColorScheme, View, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import DatePicker from 'react-native-date-picker';
 import ContentContainer from '../components/container/ContentContainer'
 import Screen from '../components/screen/Screen';
 import Text2 from '../components/text/Text2';
-import { addMedication } from '../services/db/MedicationDB';
+import { updateMedication } from '../services/db/MedicationDB';
 
-const AddMedication = ({ navigation }: any) => {
+const UpMedication = ({ route, navigation }: any) => {
+    const { id } = route.params;
     const isDarkMode = useColorScheme() === 'dark';
     const [medication, setMedication] = useState({
         medicationName: '',
@@ -21,7 +23,6 @@ const AddMedication = ({ navigation }: any) => {
         notification: false,
     });
     //Frequency 
-    const [frequency, setFrequency] = useState("")
     const [showFrequency, setShowFrequency] = useState(false)
     //schedule
 
@@ -53,20 +54,47 @@ const AddMedication = ({ navigation }: any) => {
 
     const handleSave = async () => {
         try {
-            await addMedication(medication);
-            console.log("saved")
-            Alert.alert('Medication saved!');
+            await updateMedication(id, medication);
+            Alert.alert('Medication updated!');
             navigation.navigate('Tab', { screen: 'medication', })
 
         } catch (err) {
             console.error(err);
-            Alert.alert('Error saving medication.');
+            Alert.alert('Error updating medication.');
         }
     };
 
-    useEffect(() => {
+    //deletedata
+    const handleDelete = () => {
+        Alert.alert(
+            `Delete Medication ''${medication.medicationName}''`,
+            'Are you sure you want to delete this medication?',
+            [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                    text: 'Delete',
+                    style: 'destructive',
+                    onPress: async () => {
+                        try {
+                            await deleteMedication(id);
+                            Alert.alert('Medication deleted');
+                            navigation.navigate('Tab', { screen: 'medication', })
+                        } catch (err) {
+                            Alert.alert('Error deleting medication');
+                        }
+                    },
+                },
+            ]
+        );
+    }
 
-    }, [])
+    useEffect(() => {
+        const load = async () => {
+            const data = await getMedicationById(id);
+            setMedication(data);
+        };
+        load();
+    }, [id]);
     return (
         <Screen>
             <ContentContainer>
@@ -81,18 +109,35 @@ const AddMedication = ({ navigation }: any) => {
             <ContentContainer>
                 <Text2>Frequency</Text2>
                 <Pressable onPress={() => setShowFrequency(true)}>
-                    <Text2>{frequency}</Text2>
+                    <Text2>{medication.frequency}</Text2>
                 </Pressable>
+
                 {showFrequency &&
                     <View style={styles.freqMenu} >
-                        <Pressable onPress={() => { setFrequency("everday"); setShowFrequency(false) }}>
+                        <Pressable
+                            onPress={() => {
+                                setMedication({ ...medication, frequency: 'everyday' });
+                                setShowFrequency(false);
+                            }}
+                        >
                             <Text2>everyday</Text2>
                         </Pressable>
 
-                        <Pressable onPress={() => { setFrequency("every week"); setShowFrequency(false) }}>
+                        <Pressable
+                            onPress={() => {
+                                setMedication({ ...medication, frequency: 'every week' });
+                                setShowFrequency(false);
+                            }}
+                        >
                             <Text2>every week</Text2>
                         </Pressable>
-                        <Pressable onPress={() => { setFrequency("every month"); setShowFrequency(false) }}>
+
+                        <Pressable
+                            onPress={() => {
+                                setMedication({ ...medication, frequency: 'every month' });
+                                setShowFrequency(false);
+                            }}
+                        >
                             <Text2>every month</Text2>
                         </Pressable>
                     </View>
@@ -180,19 +225,30 @@ const AddMedication = ({ navigation }: any) => {
                     <Text2>{medication.notification ? 'ON' : 'OFF'}</Text2>
                 </Pressable>
             </ContentContainer>
-            <ContentContainer>
+            <View style={{ flexDirection: 'row' }}>
+                <Pressable
+                    onPress={handleDelete}
+                    style={{ alignItems: 'center' }}
+                >
+                    <ContentContainer>
+                        <Text2>delete</Text2>
+                    </ContentContainer>
+                </Pressable>
                 <Pressable
                     onPress={async () => { await handleSave() }}
-                    style={{ alignItems: "center" }}
+                    style={{ alignItems: "center", marginLeft: 5 }}
                 >
-                    <Text2>save</Text2>
+                    <ContentContainer>
+                        <Text2>save</Text2>
+                    </ContentContainer>
                 </Pressable>
-            </ContentContainer>
+            </View>
         </Screen >
     )
 }
 
-export default AddMedication
+export default UpMedication
+
 
 const styles = StyleSheet.create({
     Screen: {
