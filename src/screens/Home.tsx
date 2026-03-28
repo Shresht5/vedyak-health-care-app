@@ -8,7 +8,6 @@ import AddButton from '../components/button/AddButton'
 import ContentContainer from '../components/container/ContentContainer'
 import { getReportsTop3 } from '../services/db/Reports'
 import { getUpcomingMedications } from '../services/db/MedicationDB'
-import BoxContainer from '../components/container/BoxContainer'
 
 const Home = ({ navigation }: any) => {
     const isDarkMode = useColorScheme() === 'dark';
@@ -75,7 +74,7 @@ const Home = ({ navigation }: any) => {
                 </ContentContainer>
 
             </Screen>
-            <AddButton addFunction={() => { navigation.navigate("AddMedication") }} />
+            {/* <AddButton addFunction={() => { navigation.navigate("AddMedication") }} /> */}
         </View>
     )
 }

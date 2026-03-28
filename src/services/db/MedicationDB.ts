@@ -1,4 +1,5 @@
 import SQLite from 'react-native-sqlite-storage';
+import { cancelMedicationNotification, scheduleMedicationNotification } from '../../utils/Notification';
 
 SQLite.enablePromise(true);
 
@@ -38,7 +39,7 @@ export const addMedication = async (medication: {
     notification: boolean;
 }) => {
     await initDB();
-    await db.executeSql(
+    const [result] = await db.executeSql(
         `INSERT INTO medications 
      (medicationName, frequency, schedule, timing, started, stock, notification)
      VALUES (?, ?, ?, ?, ?, ?, ?)`,
@@ -52,6 +53,15 @@ export const addMedication = async (medication: {
             medication.notification ? 1 : 0,
         ]
     );
+
+    const id = result.insertId;
+    if (medication.notification && id != null) {
+        await scheduleMedicationNotification(
+            id,
+            medication.medicationName,
+            medication.timing
+        );
+    }
 };
 
 // READ
@@ -148,11 +158,23 @@ export const updateMedication = async (
             id,
         ]
     );
+    // 🔔 Handle notification update
+    await cancelMedicationNotification(id);
+
+    if (medication.notification) {
+        await scheduleMedicationNotification(
+            id,
+            medication.medicationName,
+            medication.timing
+        );
+    }
 };
 
 // DELETE
 export const deleteMedication = async (id: number) => {
     const db = await initDB();
+
+    await cancelMedicationNotification(id);
     await db.executeSql(
         'DELETE FROM medications WHERE id=?',
         [id]

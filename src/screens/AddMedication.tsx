@@ -5,6 +5,7 @@ import ContentContainer from '../components/container/ContentContainer'
 import Screen from '../components/screen/Screen';
 import Text2 from '../components/text/Text2';
 import { addMedication } from '../services/db/MedicationDB';
+import { scheduleMedicationNotification } from '../utils/Notification';
 
 const AddMedication = ({ navigation }: any) => {
     const isDarkMode = useColorScheme() === 'dark';

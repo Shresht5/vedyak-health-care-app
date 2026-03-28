@@ -40,6 +40,8 @@ const TabNavigation = () => {
                 )
             }} />
             <Tab.Screen name="setting" component={Setting} options={{
+                headerTitle: 'Vedyak Health Care',
+                headerTitleAlign: 'center',
                 tabBarIcon: ({ focused }) => (
                     <Icons icon="setting" />
                 )
