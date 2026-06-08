@@ -4,10 +4,9 @@ import Screen from '../components/screen/Screen'
 import Text1 from '../components/text/Text1'
 import Text2 from '../components/text/Text2'
 import Text3 from '../components/text/Text3'
-import AddButton from '../components/button/AddButton'
-import ContentContainer from '../components/container/ContentContainer'
 import { getReportsTop3 } from '../services/db/Reports'
 import { getUpcomingMedications } from '../services/db/MedicationDB'
+import BoxContainer from '../components/container/BoxContainer'
 
 const Home = ({ navigation }: any) => {
     const isDarkMode = useColorScheme() === 'dark';
@@ -25,15 +24,15 @@ const Home = ({ navigation }: any) => {
     return (
         <View style={{ flex: 1 }}>
             <Screen>
-                <ContentContainer>{/*component qoute main*/}
+                <BoxContainer>{/*component qoute main*/}
                     <View>{/*iner part */}
                         <Text1>Happy day</Text1>
                     </View>
                     <View>{/*iner part */}
                         <Text3>today take medicine on time </Text3>
                     </View>
-                </ContentContainer>
-                <ContentContainer>{/*component notification*/}
+                </BoxContainer>
+                <BoxContainer>{/*component notification*/}
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>{/*next medicine blue, next purchase medicine red */}
                         <Text1>
                             {topMedications.length > 0
@@ -44,8 +43,8 @@ const Home = ({ navigation }: any) => {
                                 : 'No upcoming medication'}
                         </Text1>
                     </View>
-                </ContentContainer>
-                <ContentContainer>{/*component qoute main*/}
+                </BoxContainer>
+                <BoxContainer>{/*component qoute main*/}
                     <Text2>Medications</Text2>
                     {topMedications.length > 0 ? (
                         topMedications.map((item, index) => (
@@ -59,8 +58,8 @@ const Home = ({ navigation }: any) => {
                     ) : (
                         <Text3>No upcoming medications</Text3>
                     )}
-                </ContentContainer>
-                <ContentContainer>{/*component qoute main*/}
+                </BoxContainer>
+                <BoxContainer>{/*component qoute main*/}
                     <Text2>Reports</Text2>
                     {reports.length > 0 ? (
                         reports.map((item: any, index: number) => (
@@ -71,7 +70,7 @@ const Home = ({ navigation }: any) => {
                     ) : (
                         <Text3>No recent reports</Text3>
                     )}
-                </ContentContainer>
+                </BoxContainer>
 
             </Screen>
             {/* <AddButton addFunction={() => { navigation.navigate("AddMedication") }} /> */}

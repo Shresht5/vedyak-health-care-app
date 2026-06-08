@@ -11,7 +11,7 @@ const AddMedication = ({ navigation }: any) => {
     const isDarkMode = useColorScheme() === 'dark';
     const [medication, setMedication] = useState({
         medicationName: '',
-        frequency: 'everyday',
+        frequency: 'every day',
         schedule: [{
             label: 'morning',
             dose: 0,
@@ -85,9 +85,9 @@ const AddMedication = ({ navigation }: any) => {
                     <Text2>{frequency}</Text2>
                 </Pressable>
                 {showFrequency &&
-                    <View style={styles.freqMenu} >
-                        <Pressable onPress={() => { setFrequency("everday"); setShowFrequency(false) }}>
-                            <Text2>everyday</Text2>
+                    <View style={{ position: "absolute", backgroundColor: isDarkMode ? "#000" : "#fff", borderColor: isDarkMode ? "#fff" : "#000", borderWidth: 2, borderStyle: "solid", }}>
+                        <Pressable onPress={() => { setFrequency("every day"); setShowFrequency(false) }}>
+                            <Text2>every day</Text2>
                         </Pressable>
 
                         <Pressable onPress={() => { setFrequency("every week"); setShowFrequency(false) }}>
@@ -196,21 +196,8 @@ const AddMedication = ({ navigation }: any) => {
 export default AddMedication
 
 const styles = StyleSheet.create({
-    Screen: {
-        flex: 1,
-    },
     frequencyContainer: {
         position: "relative",
         zIndex: 100,
-    },
-    freqMenu: {
-        position: "absolute",
-        backgroundColor: "#000"
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        padding: 5,
-        marginVertical: 3,
     },
 })

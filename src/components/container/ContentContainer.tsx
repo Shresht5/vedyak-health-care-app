@@ -5,7 +5,7 @@ const contentContainer = ({ children }: any) => {
     const isDarkMode = useColorScheme() === 'dark';
 
     return (
-        <View style={{ borderColor: isDarkMode ? "#fff" : "#000", borderWidth: 2, borderStyle: "solid", borderRadius: 15, padding: 10, marginTop: 15 }}>
+        <View style={{ borderColor: isDarkMode ? "#fff" : "#000", borderWidth: 2, borderStyle: "solid", borderRadius: 7, padding: 10, marginTop: 15 }}>
             {children}
         </View>
     )
